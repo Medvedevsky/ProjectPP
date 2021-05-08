@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://cdn.jsdelivr.net/npm/vue@2/dist/vue.js"></script>
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+    <title>Document</title>
+</head>
+<body>
+    <div id="app" >
+        <input v-model="textSearch" size="50">
+
+        <button @click="postTextApi">Запостить</button>
+        <button @click="getTextApi">Показать запощенное</button>
+        <hr>
+    
+         <ul>
+            <li v-for="text in textsList">{{text.text}}</li>
+        </ul>
+    </div>
+
+    <script>
+        var app = new Vue({
+            el: '#app',
+            data: {
+                textSearch: '',
+                textsList: [],
+                errors:[],
+                url: {
+                    getUrl: 'http://localhost:5000/api/webtext',
+                    postUrl: 'http://localhost:5000/api/webtext'
+                }
+            },
+
+            watch:{
+              
+            },
+
+            methods: {
+                addTexts(){
+                    this.textsList.push(this.textSearch);
+                },
+
+                getTextApi(){
+                    axios
+                    .get(this.url.getUrl)
+                    .then((responce)=>{
+                        this.textsList = responce.data;
+                    })
+                },
+
+                postTextApi(){
+                   axios({
+                       method: 'post',
+                       url: this.url.postUrl,
+                       data:{
+                           text: this.textSearch
+                       }
+                   });
+                  
+                }
+            },
+        })
+    </script>
+</body>
+</html>
